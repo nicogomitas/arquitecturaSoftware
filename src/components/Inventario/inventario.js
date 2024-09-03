@@ -69,12 +69,9 @@ const Inventario = () => {
                         <th>Precio de compra</th>
                         <th>Precio venta sin IVA</th>
                         <th>Precio venta con IVA</th>
-                        <th>Precio sugerido de venta</th> 
+                        
                         <th>Cantidad</th>
-                        <th>Margen de contribución</th>
-                        <th>Margen de descuento</th>
-                        <th>Margen Cont.Mínimo</th>
-                        <th>Precio sugerido de venta mínimo</th>
+                        
                     </tr>
                 </thead>
                 <tbody>
@@ -84,12 +81,9 @@ const Inventario = () => {
                         <td>${formatPrice(item.compra)}</td>
                         <td>${formatPrice(item.sinIva)}</td>
                         <td>${formatPrice(item.conIva)}</td>
-                        <td>${formatPrice(item.recomendado)}</td>
+                        
                         <td>{item.stock}</td>
-                        <td>{formatPrice(item.margenContribucion)}</td>
-                        <td>{formatPrice(item.margenDescuento)}</td>
-                        <td>{formatPrice(item.margenContMin)}</td>
-                        <td>${formatPrice(item.recomendadoMin)}</td>
+                       
                     </tr>
                 ))}
                 </tbody>

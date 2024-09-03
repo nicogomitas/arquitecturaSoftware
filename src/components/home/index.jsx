@@ -17,7 +17,7 @@ const Home = () => {
                 Bienvenido {currentUser.displayName ? currentUser.displayName : currentUser.email}
             </div>
             <div className='text-xl font-bold mt-2'>
-                a la aplicación de Ferretejas.
+                a la aplicación de MiniMarket.
             </div>
             <div className="flex flex-row items-center mt-4">
                 {/* Mostrar solo si el usuario es administrador */}

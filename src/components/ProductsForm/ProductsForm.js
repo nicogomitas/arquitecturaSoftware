@@ -12,21 +12,15 @@ const ProductsForm = () => {
     const [compra, setCompra] = useState('');
     const [sinIva, setSinIva] = useState('');
     const [conIva, setConIva] = useState('');
-    const [recomendado, setRecomendado] = useState('');
     const [stock, setStock] = useState('');
-    const [margenContribucion, setMargenContribucion] = useState('');
-    const [margenDescuento, setMargenDescuento] = useState('');
-    const [margenContMin, setMargenContMin] = useState('');
-    const [recomendadoMin, setRecomendadoMin] = useState('');
     const [products, setProducts] = useState([]);
     const [selectedProductId, setSelectedProductId] = useState(null);
     const [selectedProductHistory, setSelectedProductHistory] = useState([]);
     const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
-
+    const [fechaVencimiento, setFechaVencimiento] = useState('');
+    const [lote, setLote] = useState('');
     // Calcular el precio con IVA
     const conIvaValue = parseFloat(sinIva) * 1.19;
-    // Calcular el precio recomendado de venta (precio con IVA + 672)
-    const recomendadoValue = conIvaValue + 672;
 
 
     useEffect(() => {
@@ -45,7 +39,7 @@ const ProductsForm = () => {
     const handleProductRegistration = async (e) => {
         e.preventDefault();
 
-        if (!name || !compra|| !stock) {
+        if (!name || !compra || !stock) {
             alert("Por favor complete todos los campos.");
             return;
         }
@@ -58,10 +52,7 @@ const ProductsForm = () => {
             const db = getFirestore();
             const productsCollectionRef = collection(db, "products");
             const querySnapshot = await getDocs(query(productsCollectionRef, where("name_lowercase", "==", lowercaseName)));
-            const margenContribucionValue = (((parseFloat(sinIva) - parseFloat(compra)) / (parseFloat(compra)) * 100))
-            const margenDescuentoValue = ((parseFloat(margenContribucionValue) * 25) / 100)
-            const margenContMinValue = (parseFloat(margenContribucionValue) - parseFloat(margenDescuentoValue))
-            const recomendadoMinValue = (parseFloat(compra) * (parseFloat(margenContMinValue) + 100) * 1.19)
+
 
             if (!querySnapshot.empty) {
                 alert("Ya existe un producto con este nombre.");
@@ -74,42 +65,37 @@ const ProductsForm = () => {
                 name: name,
                 name_lowercase: lowercaseName, // Agregar una versión en minúsculas del nombre para realizar la búsqueda
                 compra: compra,
-                /* sinIva: sinIva, */
+                sinIva: sinIva, 
                 conIva: conIvaValue,
-                /* recomendado: recomendadoValue, */
                 stock: stock,
-                /* margenContribucion: margenContribucionValue,
-                margenDescuento: margenDescuentoValue,
-                margenContMin: margenContMinValue,
-                recomendadoMin: recomendadoMinValue, */
+                fechaVencimiento: fechaVencimiento,
+                lote: lote,
                 updateHistory: [{ dateTime: updateDateTime }]
             });
             console.log(app.firestore);
             console.log("Product added successfully!");
 
-            /* setMargenContribucion(margenContribucionValue);
-            setMargenDescuento(margenDescuentoValue);
-            setMargenContMin(margenContMinValue);
-            setRecomendadoMin(recomendadoMinValue); */
-
             setName('');
             setCompra('');
             setSinIva('');
+            setConIva('');
+            
             setStock('');
+            setFechaVencimiento('')
+            setLote('');
 
 
 
             const updatedProducts = [...products, {
                 name,
                 compra,
-                /* sinIva, */
+                sinIva, 
+
                 conIva: conIvaValue,
-                /* recomendado: recomendadoValue, */
                 stock,
-                /* margenContribucion: margenContribucionValue,
-                margenDescuento: margenDescuentoValue,
-                margenContMin: margenContMinValue,
-                recomendadoMin: recomendadoMinValue */
+                
+                fechaVencimiento,
+                lote,
             }];
             setProducts(updatedProducts);
         } catch (error) {
@@ -147,11 +133,8 @@ const ProductsForm = () => {
             const docSnapshot = await getDoc(productDocRef);
             const productData = docSnapshot.data();
 
-            /* const margenContribucionValue = (((parseFloat(sinIva) - parseFloat(compra)) / (parseFloat(compra)) * 100))
-            const margenDescuentoValue = ((parseFloat(margenContribucionValue) * 25) / 100)
-            const margenContMinValue = (parseFloat(margenContribucionValue) - parseFloat(margenDescuentoValue))
-            const recomendadoMinValue = (parseFloat(compra) * (parseFloat(margenContMinValue) + 100) * 1.19)
- */
+            
+ 
             // Actualizar el historial de actualizaciones
             const updatedHistory = productData.updateHistory || [];
             updatedHistory.push({ dateTime: new Date() });
@@ -161,19 +144,15 @@ const ProductsForm = () => {
                 compra: compra,
                 /* sinIva: sinIva, */
                 conIva: conIva,
-                /* recomendado: recomendado, */
                 stock: stock,
-                /* margenContribucion: margenContribucionValue, // Nuevo campo
-                margenDescuento: margenDescuentoValue, // Nuevo campo
-                margenContMin: margenContMinValue, // Nuevo campo
-                recomendadoMin: recomendadoMinValue, // Nuevo campo */
+               
+                fechaVencimiento,
+                lote,
                 updateHistory: updatedHistory
             });
             console.log("Product updated successfully!");
-            /* setMargenContribucion(margenContribucionValue);
-            setMargenDescuento(margenDescuentoValue);
-            setMargenContMin(margenContMinValue);
-            setRecomendadoMin(recomendadoMinValue); */
+            setFechaVencimiento(fechaVencimiento);
+
             // Actualizar la lista de productos después de la edición
             const updatedProducts = products.map(product => {
                 if (product.id === selectedProductId) {
@@ -181,15 +160,12 @@ const ProductsForm = () => {
                         ...product,
                         name: name,
                         compra: compra,
-                        /* sinIva: sinIva, */
+                        sinIva: sinIva, 
                         conIva: conIvaValue, // Actualiza conIva con el nuevo valor
-                        /* recomendado: recomendadoValue,  */// Actualiza recomendado con el nuevo valor
                         stock: stock,
-                        /* margenContribucion: margenContribucionValue, // Nuevo campo
-                        margenDescuento: margenDescuentoValue, // Nuevo campo
-                        margenContMin: margenContMinValue, // Nuevo campo
-                        recomendadoMin: recomendadoMinValue, */
-
+                        fechaVencimiento: fechaVencimiento,
+                        lote : lote,
+                        
                     };
                 }
                 return product;
@@ -198,8 +174,10 @@ const ProductsForm = () => {
             // Limpiar los campos de entrada después de la edición
             setName('');
             setCompra('');
-            /* setSinIva(''); */
+            setSinIva(''); 
             setStock('');
+            setFechaVencimiento('');
+            setLote('');
             setSelectedProductId(null);
         } catch (error) {
             console.error("Error updating product: ", error);
@@ -210,11 +188,13 @@ const ProductsForm = () => {
     const handleProductClick = (product) => {
         setName(product.name);
         setCompra(product.compra);
-        /* setSinIva(product.sinIva); */
+        setSinIva(product.sinIva); 
         setConIva(product.conIva);
-        /* setRecomendado(product.recomendado); */
+        
         setStock(product.stock);
         setSelectedProductId(product.id);
+        setFechaVencimiento(product.fechaVencimiento);
+        setLote(product.lote);
     };
 
     const handleShowHistoryModal = (product) => {
@@ -236,8 +216,10 @@ const ProductsForm = () => {
                     <form className="form" onSubmit={handleProductRegistration}>
                         <input type="text" placeholder="Nombre del producto" value={name} onChange={(e) => setName(e.target.value)} />
                         <input type="number" placeholder="Precio de compra" value={compra} onChange={(e) => setCompra(e.target.value)} />
-                        {/* <input type="number" placeholder="Precio sin IVA" value={sinIva} onChange={(e) => setSinIva(e.target.value)} /> */}
+                        <input type="number" placeholder="Precio sin IVA" value={sinIva} onChange={(e) => setSinIva(e.target.value)} /> 
                         <input type="number" placeholder="Cantidad del producto" value={stock} onChange={(e) => setStock(e.target.value)} />
+                        <input type="date" placeholder="Fecha de vencimiento" value={fechaVencimiento} onChange={(e) => setFechaVencimiento(e.target.value)} />
+                        <input type="number" placeholder="Lote" value={lote} onChange={(e) => setLote(e.target.value)} />
                         <button type="submit">Registrar</button>
                         <button type="button" onClick={handleProductEdit}>Actualizar</button>
                     </form>
@@ -250,8 +232,11 @@ const ProductsForm = () => {
                         <tr>
                             <th>Nombre</th>
                             <th>Precio de compra</th>
-                            {/* <th>Precio sin IVA</th> */}
+                            <th>Precio sin IVA</th> 
+                            <th>Precio con IVA</th> 
                             <th>Cantidad</th>
+                            <th>Fecha de vencimiento</th>
+                            <th>Lote</th>
                             {isAdmin && <th>Acciones</th>}
                             <th>Historial</th>
                         </tr>
@@ -261,8 +246,11 @@ const ProductsForm = () => {
                             <tr key={product.id}>
                                 <td>{product.name}</td>
                                 <td>${product.compra}</td>
-                                {/* <td>${product.sinIva}</td> */}
+                                <td>${product.sinIva}</td>
+                                <td>${product.conIva}</td> 
                                 <td>{product.stock}</td>
+                                <td>{product.fechaVencimiento}</td>
+                                <td>{product.lote}</td>
                                 {isAdmin && (
                                     <td className="action-buttons">
                                         <button onClick={() => handleProductDeletion(product.name)}>Eliminar </button>

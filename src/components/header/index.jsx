@@ -13,7 +13,7 @@ const Header = () => {
                     ?
                     <>
                         <Link className='text-lg' to={'/home'}>
-                            <span className='font-bold'>Ferretejas</span> <span className='font-bold text-gray-400'>App</span>
+                            <span className='font-bold'>MiniMarket</span> <span className='font-bold text-gray-400'>App</span>
                         </Link>
                         <button
                             onClick={() => { doSignOut().then(() => { navigate('/login') }) }}
@@ -24,7 +24,7 @@ const Header = () => {
                     :
                     <>
                         <Link className='text-lg' to={'/login'}>
-                            <span className='font-bold'>Ferretejas</span> <span className='font-bold text-gray-400'>App</span>
+                            <span className='font-bold'>MiniMarket</span> <span className='font-bold text-gray-400'>App</span>
                         </Link>
                         <Link className='text-x1 text-gray-1000' to={'/aboutUs'}>
                             About us
