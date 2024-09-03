@@ -51,11 +51,11 @@ const Home = () => {
                 </Link>
 
                 {/* Mostrar para cualquier usuario autenticado */}
-                <Link to="/cotizacion" className="card-link">
+                {/* <Link to="/cotizacion" className="card-link">
                     <button className="card-button">
                         Generar Venta sin Margen
                     </button>
-                </Link>
+                </Link> */}
             </div>
 
         </div>

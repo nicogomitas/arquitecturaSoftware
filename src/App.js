@@ -50,10 +50,10 @@ function App() {
       path: "/historialVentas", // Ruta para el historial de ventas
       element: <HistorialVentas />,
     },
-    {
+    /* {
       path: "/cotizacion", // Ruta para la venta sin margen
       element: <Cotizacion />,
-    },
+    }, */
   ];
 
   let routesElement = useRoutes(routesArray);

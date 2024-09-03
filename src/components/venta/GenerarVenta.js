@@ -53,14 +53,14 @@ const GenerarVenta = () => {
 
                 if (!productosExistentes.find(p => p.name.toLowerCase() === nombre.toLowerCase())) {
                     const precioConIva = parseFloat(precioSinIva) * 1.19;
-                    const nuevoMargenContribucion = (((parseFloat(precioSinIva) - parseFloat(precioCompra)) / parseFloat(precioSinIva)) * 100);
-                    const nuevoMargenDescuento = ((nuevoMargenContribucion * 25) / 100);
-                    const nuevoMargenContMin = nuevoMargenContribucion - nuevoMargenDescuento;
-                    const nuevoRecomendadoMin = parseFloat((precioCompra * (1 + nuevoMargenContMin / 100) * 1.19));
-                    const precioRecomendado = nuevoMargenContribucion < 0 ? ((parseFloat(precioCompra) * 1.3) + 747) * 1.19 : (parseFloat(precioSinIva) + 747) * 1.19;
-                    const totalProducto = precioRecomendado * parseInt(cantidad);
+                    //const nuevoMargenContribucion = (((parseFloat(precioSinIva) - parseFloat(precioCompra)) / parseFloat(precioSinIva)) * 100);
+                    //const nuevoMargenDescuento = ((nuevoMargenContribucion * 25) / 100);
+                    //const nuevoMargenContMin = nuevoMargenContribucion - nuevoMargenDescuento;
+                    //const nuevoRecomendadoMin = parseFloat((precioCompra * (1 + nuevoMargenContMin / 100) * 1.19));
+                    //const precioRecomendado = nuevoMargenContribucion < 0 ? ((parseFloat(precioCompra) * 1.3) + 747) * 1.19 : (parseFloat(precioSinIva) + 747) * 1.19;
+                    const totalProducto = precioConIva * parseInt(cantidad);
                     totalVentaCalculado += totalProducto;
-                    const nuevoMargenContribucion2 = ((((parseFloat(precioRecomendado) / 1.19) - parseFloat(precioCompra)) / parseFloat(precioRecomendado) / 1.19) * 100);
+                    //const nuevoMargenContribucion2 = ((((parseFloat(precioRecomendado) / 1.19) - parseFloat(precioCompra)) / parseFloat(precioRecomendado) / 1.19) * 100);
                     const updateDateTime = new Date();
                     const lowercaseName = nombre.toLowerCase();
 
@@ -70,12 +70,12 @@ const GenerarVenta = () => {
                         compra: parseFloat(precioCompra),
                         sinIva: parseFloat(precioSinIva),
                         conIva: precioConIva,
-                        recomendado: parseFloat(precioRecomendado),
+                        //recomendado: parseFloat(precioRecomendado),
                         stock: parseInt(stock),
-                        margenContribucion: parseFloat(nuevoMargenContribucion2),
-                        margenDescuento: parseFloat(nuevoMargenDescuento),
-                        margenContMin: parseFloat(nuevoMargenContMin),
-                        recomendadoMin: parseFloat(nuevoRecomendadoMin),
+                        //margenContribucion: parseFloat(nuevoMargenContribucion2),
+                        //margenDescuento: parseFloat(nuevoMargenDescuento),
+                        //margenContMin: parseFloat(nuevoMargenContMin),
+                        //recomendadoMin: parseFloat(nuevoRecomendadoMin),
                         dateTime: updateDateTime
                     });
 
@@ -126,8 +126,8 @@ const GenerarVenta = () => {
         newProductos[index] = { ...newProductos[index], [name]: value };
     
         // Obtener valores actuales de los márgenes
-        const currentMargenContMin = newProductos[index].margenContMin;
-        const currentMargenContribucion = newProductos[index].margenContribucion;
+        //const currentMargenContMin = newProductos[index].margenContMin;
+        //const currentMargenContribucion = newProductos[index].margenContribucion;
     
         // Recalculate total for the updated product
         const precioCompra = parseFloat(newProductos[index].precioCompra) || 0;
@@ -140,23 +140,25 @@ const GenerarVenta = () => {
             return; // Detener la ejecución si la cantidad excede el stock
         }
     
-        let precioRecomendado;
+        /* let precioRecomendado;
         if (parseFloat(currentMargenContribucion) < 0) {
             precioRecomendado = ((precioCompra * 1.3) + 747) * 1.19;
         } else {
             precioRecomendado = (precioSinIva + 747) * 1.19;
-        }
-    
-        const totalProducto = precioRecomendado * cantidad;
+        } */
+        
+        //cambios aca -----
+        const precioConIva = parseFloat(precioSinIva) * 1.19;
+        const totalProducto = precioConIva * cantidad;
     
         newProductos[index] = {
             ...newProductos[index],
             [name]: value,
             totalProducto: totalProducto,
-            recomendado: precioRecomendado,
+            //recomendado: precioRecomendado,
             // No actualizar márgenes
-            margenContMin: currentMargenContMin,
-            margenContribucion: currentMargenContribucion,
+            //margenContMin: currentMargenContMin,
+            //margenContribucion: currentMargenContribucion,
             venta: [{ dateTime: updateDateTime }]
         };
         setProductos(newProductos);
@@ -172,12 +174,12 @@ const GenerarVenta = () => {
     };
         
     
-    const handleNuevoMargenContribucionChange = (index, e) => {
+    /* const handleNuevoMargenContribucionChange = (index, e) => {
         const { value } = e.target;
         const updatedProductos = [...productos];
-        const nuevoMargenContribucion2 = parseFloat(value);
-        const margenContMin = parseFloat(updatedProductos[index].margenContMin);
-        const margenContribucion = parseFloat(updatedProductos[index].margenContribucion);
+        //const nuevoMargenContribucion2 = parseFloat(value);
+        //const margenContMin = parseFloat(updatedProductos[index].margenContMin);
+        //const margenContribucion = parseFloat(updatedProductos[index].margenContribucion);
     
         // Verificar que el nuevo margen esté entre margenContMin y margenContribucion, incluyendo los decimales
         if (nuevoMargenContribucion2 >= margenContMin && nuevoMargenContribucion2 <= margenContribucion) {
@@ -194,7 +196,7 @@ const GenerarVenta = () => {
             // Opcional: manejar el caso en que el margen ingresado no esté en el rango permitido
             console.error(`El margen de contribución debe estar entre ${margenContMin.toFixed(2)} y ${margenContribucion.toFixed(2)}.`);
         }
-    };
+    }; */
 
     useEffect(() => {
         const fetchProductosExistentes = async () => {
@@ -243,9 +245,10 @@ const GenerarVenta = () => {
                 nombre: productoExistente.name,
                 precioCompra: productoExistente.compra.toString(),
                 precioSinIva: productoExistente.sinIva.toString(),
-                recomendado: productoExistente.recomendado, // se añade la corrección para que se imprima el recomendado
-                margenContMin: productoExistente.margenContMin,
-                margenContribucion: productoExistente.margenContribucion,
+                precioConIva: (productoExistente.sinIva * 1.19).toString(),
+                //recomendado: productoExistente.recomendado, // se añade la corrección para que se imprima el recomendado
+                //margenContMin: productoExistente.margenContMin,
+                //margenContribucion: productoExistente.margenContribucion,
                 cantidad: '', // Puedes definir una cantidad inicial aquí
                 stock: productoExistente.stock.toString(),
                 venta: [{ dateTime: updateDateTime }]
@@ -532,8 +535,8 @@ const GenerarVenta = () => {
                                 <tr>
                                     <th>Producto</th>
                                     <th>Precio Unitario</th>
-                                    <th>Intervalo margen</th>
-                                    <th>Seleccionar margen</th>
+                                    {/* <th>Intervalo margen</th> */}
+                                    {/* <th>Seleccionar margen</th> */}
                                     <th>Cantidad</th>
                                     <th>Total</th>
                                     <th>Historial</th>
@@ -544,16 +547,16 @@ const GenerarVenta = () => {
                                 {productos.map((producto, index) => (
                                     <tr key={index}>
                                             <td>{producto.nombre}</td>
-                                                    <td>${parseFloat(producto.recomendado).toLocaleString('es-ES', { maximumFractionDigits: 0 })}</td>
-                                                    <td>{parseFloat(producto.margenContMin).toFixed(2)} a {parseFloat(producto.margenContribucion).toFixed(2)}</td>
-
-                                                    <td>
+                                                    <td>${parseFloat(producto.precioConIva).toLocaleString('es-ES', { maximumFractionDigits: 0 })}</td>
+                                                    {/* <td>{parseFloat(producto.margenContMin).toFixed(2)} a {parseFloat(producto.margenContribucion).toFixed(2)}</td>
+ */}
+                                                    {/* <td>
                                                         <input
                                                             type="number"
                                                             value={producto.nuevoMargenContribucion1} // Asigna el valor del estado del producto aquí
                                                             onChange={(e) => handleNuevoMargenContribucionChange(index, e)} // Maneja el cambio en el valor del input
                                                         />
-                                                    </td>
+                                                    </td> */}
                                                     <td>{producto.cantidad}</td>
                                                     <td>${parseFloat(producto.totalProducto).toLocaleString('es-ES', { maximumFractionDigits: 0 })}</td>
                                                     <td>{producto.venta && producto.venta[0] && producto.venta[0].dateTime ?
